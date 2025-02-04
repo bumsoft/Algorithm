@@ -2,7 +2,6 @@
 using namespace std;
 using ll = long long;
 
-bitset<1'000'000'001> vis;
 //BFS
 int main()
 {
@@ -19,8 +18,6 @@ int main()
 		int cost = Q.front().second;
 		Q.pop();
 		if (now > B) continue;
-		if (vis[now]) continue;
-		vis[now] = 1;
 		if (now == B)
 		{
 			cout << cost + 1;
