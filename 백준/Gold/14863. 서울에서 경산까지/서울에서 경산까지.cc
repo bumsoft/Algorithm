@@ -8,7 +8,7 @@ int walk_money[101];
 int bike_time[101];
 int bike_money[101];
 
-int dp[101][100'000]; //dp[i][j] : i번도시까지, j시간에 걸려 왔을 때의 모금액 => i-1번 도시에서 j-(i번소요시간) 시간 + i번금액 // i-1번 도시에서 j-(i번자전거소요시갼)시간 + i번자전거금액
+int dp[101][100'000]; //dp[i][j] : i번도시까지, j시간에 걸려 왔을 때의 모금액
 
 int main() {
 
@@ -19,31 +19,104 @@ int main() {
 	{
 		cin >> walk_time[i] >> walk_money[i] >> bike_time[i] >> bike_money[i];
 	}
-
-	dp[1][walk_time[1]] = walk_money[1];
-	dp[1][bike_time[1]] = bike_money[1];
+	for (int i = 0; i <= K; i++)
+	{
+		dp[1][i] = -1;
+	}
 	if (walk_time[1] == bike_time[1])
 	{
-		dp[1][walk_time[1] = max(walk_money[1], bike_money[1])];
+		dp[1][walk_time[1]] = max(walk_money[1], bike_money[1]);
 	}
+	else
+	{
+		dp[1][walk_time[1]] = walk_money[1];
+		dp[1][bike_time[1]] = bike_money[1];
+	}
+
+
 	for (int i = 2; i <= N; i++)
 	{
 		for (int j = 0; j <= K; j++)
 		{
-			if (j - walk_time[i] >= 0 && j - bike_time[i] >= 0)
+
+			/////////////////////////////////////////////////
+			if (1)
 			{
-				if (dp[i - 1][j - walk_time[i]] && dp[i - 1][j - bike_time[i]]) dp[i][j] = max(dp[i - 1][j - walk_time[i]] + walk_money[i], dp[i - 1][j - bike_time[i]] + bike_money[i]);
-				else if (dp[i - 1][j - walk_time[i]]) dp[i][j] = dp[i - 1][j - walk_time[i]] + walk_money[i];
-				else if (dp[i - 1][j - bike_time[i]]) dp[i][j] = dp[i - 1][j - bike_time[i]] + bike_money[i];
+				if (j - walk_time[i] >= 0 && j - bike_time[i] >= 0)
+				{
+					if (dp[i-1][j - walk_time[i]] != -1 && dp[i-1][j - bike_time[i]] != -1)
+					{
+						dp[i][j] = dp[i - 1][j - walk_time[i]] + walk_money[i];
+						dp[i][j] = max(dp[i - 1][j - bike_time[i]] + bike_money[i], dp[i][j]);
+						continue;
+					}
+					if (dp[i-1][j - walk_time[i]] != -1 && dp[i-1][j - bike_time[i]] == -1)
+					{
+						dp[i][j] = dp[i - 1][j - walk_time[i]] + walk_money[i];
+						continue;
+					}
+					if (dp[i-1][j - walk_time[i]] == -1 && dp[i-1][j - bike_time[i]] != -1)
+					{
+						dp[i][j] = dp[i - 1][j - bike_time[i]] + bike_money[i];
+						continue;
+					}
+					else
+					{
+						dp[i][j] = -1;
+					}
+				}
+
+				if (j - walk_time[i] >= 0 && j - bike_time[i] < 0)
+				{
+					if (dp[i-1][j - walk_time[i]] != -1)
+					{
+						dp[i][j] = dp[i - 1][j - walk_time[i]] + walk_money[i];
+						continue;
+					}
+					else
+					{
+						dp[i][j] = -1;
+						continue;
+					}
+				}
+
+
+				if (j - walk_time[i] < 0 && j - bike_time[i] >= 0)
+				{
+					//if (i == 2 && j == 500) cout << "fuck" << j - bike_time[i];
+					if (dp[i-1][j - bike_time[i]] != -1)
+					{
+						dp[i][j] = dp[i - 1][j - bike_time[i]] + bike_money[i];
+						//cout << dp[i][j] << '\n';
+						continue;
+					}
+					else
+					{
+						dp[i][j] = -1;
+						continue;
+					}
+				}
+
+				else
+				{
+					dp[i][j] = -1;
+				}
 			}
-			else if (j - walk_time[i] >= 0 && j - bike_time[i] < 0 && dp[i-1][j-walk_time[i]]) dp[i][j] = dp[i - 1][j - walk_time[i]] + walk_money[i];
-			else if (j - walk_time[i] < 0 && j - bike_time[i] >= 0 && dp[i-1][j-bike_time[i]]) dp[i][j] = dp[i - 1][j - bike_time[i]] + bike_money[i]; 
 		}
 	}
 	int ans = 0;
 	for (int i = 0; i <= K; i++)
 	{
-		ans = max(dp[N][i], ans);
+		ans = max(ans, dp[N][i]);
 	}
 	cout << ans;
+	//cout << '\n';
+	//for (int i = 1; i <= N; i++)
+	//{
+	//	for (int j = 0; j <= K; j++)
+	//	{
+	//		if (dp[i][j] == -1) continue;
+	//		cout << "dp[" << i << "][" << j << "]: " << dp[i][j] << ' ';
+	//	}cout << '\n';
+	//}
 }
