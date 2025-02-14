@@ -2,50 +2,47 @@
 using namespace std;
 using ll = long long;
 
-int arr[1001];
 int T, W;
 
-int mem[1001][31][3];
-
-int backTracking(int s, int w, int loc)
-{
-	if (w == W)
-	{
-		int r = 0;
-		for (int i = s; i <= T; i++)
-		{
-			if (arr[i] == loc) r++;
-		}
-		return r;
-	}
-	if (s > T) return 0; 
-
-	if (mem[s][w][loc] != -1) return mem[s][w][loc];
-	int add = 0;
-	if (arr[s] == loc) add++;
-
-	int cloc = loc == 1 ? 2 : 1;
-	return mem[s][w][loc] = max(backTracking(s + 1,w,loc) + add, backTracking(s + 1, w + 1, cloc) + add);
-}
+int dp[1001][31]; // [i][j]: i시간에 j번 움직였을 때 최대 개수
 
 int main() {
 
 	ios_base::sync_with_stdio(0); cin.tie(0);
 	cin >> T >> W;
-	for (int i = 1; i <= T; i++)
+	int t;
+	for (int i = 1; i <= T; i++) //시간
 	{
-		cin >> arr[i];
-	}
-	for (int i = 0; i <= T; i++)
-	{
-		for (int j = 0; j <= W; j++)
+		cin >> t;
+
+		for (int j = 0; j <= W; j++) //움직임
 		{
-			for (int k = 0; k <= 3; k++)
+			if (j == 0)
 			{
-				mem[i][j][k] = -1;
+				dp[i][j] = dp[i - 1][j];
+				if (t == 1) dp[i][j]++;
+				continue;
+			}
+			if (j % 2 == 0) //1번에 위치
+			{
+				//i초에 j번 움직여서 1번에 있으려면? i-1초에 j-1번 움직여서 2번에 있어야함
+				//								또는 i-1초에 j번 움직였음
+				dp[i][j] = max(dp[i - 1][j - 1], dp[i-1][j]);
+				if (t == 1) dp[i][j]++;
+			}
+			else //2번에 위치
+			{
+				//i초에 j번 움직여서 2번에 있으려면? i-1초에 j-1번 움직여서 1번에 있어야함.
+				//								또는 i-1초에 j번 움직였음
+				dp[i][j] = max(dp[i - 1][j - 1], dp[i - 1][j]);
+				if (t == 2) dp[i][j]++;
 			}
 		}
 	}
-	cout<<max(backTracking(1, 0, 1), backTracking(1, 1, 2));
-
+	int max_ = 0;
+	for (int i = 0; i <= W; i++)
+	{
+		max_ = max(max_, dp[T][i]);
+	}
+	cout << max_;
 }
