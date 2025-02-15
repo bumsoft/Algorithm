@@ -2,41 +2,43 @@
 using namespace std;
 using ll = long long;
 
-// 100'000
-// g가 주어졌을 때, 이분탐색으로 g이하의 빈 게이트를 찾으면 됨
+int gate[100'001];
 
-// -4 -3 -2 -1
-// 
-// -4 -1 -1
+int f(int t)
+{
+	if (gate[t] == 0)
+	{
+		return -1;
+	}
+	if (gate[t] == t)
+	{
+		gate[t] = t - 1;
+		return t - 1;
+	}
+	return gate[t] = f(gate[t]);
 
-// 도킹된 게이트는 리스트에서 제거해야함. 빠르게 제거해야하는데...
 
-// logN * logN * N
-int ans;
+}
+
 int main() {
 
 	ios_base::sync_with_stdio(0); cin.tie(0);
 	int G, P; cin >> G >> P;
-	set<int> S;
 	for (int i = 1; i <= G; i++)
 	{
-		S.insert(-i);
+		gate[i] = i;
 	}
-	int temp;
-	bool c = false;
+	int t;
+	int ans = 0;
 	for (int i = 0; i < P; i++)
 	{
-		cin >> temp;
-		if (c) continue;
-		temp = -temp;
-
-		auto t = S.lower_bound(temp);
-		if (t == S.end())
+		cin >> t;
+		int r = f(t);
+		if (r == -1)
 		{
-			c = true;
-			continue;
+			cout << ans;
+			return 0;
 		}
-		S.erase(t);
 		ans++;
 	}
 	cout << ans;
