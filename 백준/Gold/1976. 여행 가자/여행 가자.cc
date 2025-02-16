@@ -2,47 +2,43 @@
 using namespace std;
 using ll = long long;
 
-vector<int> vertex[201];
-bool vis[201][201];
+int arr[201];
+
+int F(int a)
+{
+	if (arr[a] == a) return a;
+	else return arr[a] = F(arr[a]);
+}
+
 
 int main() {
 
 	ios_base::sync_with_stdio(0); cin.tie(0);
 	int N, M;
 	cin >> N >> M;
+	for (int i = 1; i <= N; i++) arr[i] = i;
+
+	int t;
 	for (int i = 1; i <= N; i++)
 	{
 		for (int j = 1; j <= N; j++)
 		{
-			int t; cin >> t;
-			if (t == 1) vertex[i].push_back(j);
-		}
-	}
-	for (int i = 1; i <= N; i++)
-	{
-		queue<int> q;
-		q.push(i);
-		vis[i][i] = 1;
-		while (!q.empty())
-		{
-			int ver = q.front();
-			q.pop();
-			for (int k = 0; k < vertex[ver].size(); k++)
+			cin >> t;
+			if (j <= i)continue;
+			if (t == 1)
 			{
-				if (vis[i][vertex[ver][k]]) continue;
-				vis[i][vertex[ver][k]] = 1;
-				q.push(vertex[ver][k]);
+				//i와 j union
+				arr[F(i)] = F(j);
 			}
 		}
 	}
-	int t, pre;
-	cin >> pre;
-	M--;
-	while (M--)
+
+	int pre; cin >> pre;
+	for (int i = 1; i < M; i++)
 	{
 		cin >> t;
-		if (vis[pre][t]) pre = t;
-		else { cout << "NO";  return 0; }
+		if (F(pre) == F(t)) pre = t;
+		else {cout << "NO"; return 0;}
 	}
 	cout << "YES";
 	return 0;
