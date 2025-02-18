@@ -2,7 +2,7 @@
 using namespace std;
 using ll = long long;
 
-int sum[10'001];
+int arr[10'001];
 
 int main() {
 
@@ -12,26 +12,41 @@ int main() {
 	cin >> N >> M;
 	for (int i = 1; i <= N; i++)
 	{
-		cin >> sum[i];
-		sum[i] += sum[i - 1];
+		cin >> arr[i];
 	}
 
 	int ans = 0;
-	for (int i = 0; i <= N; i++)
+	
+	int s = 0;
+	int e = 1;
+
+	int n = arr[e];
+
+	while (true)
 	{
-		for (int j = i + 1; j <= N; j++)
+		if (e > N) break;
+		if (n < M)
 		{
-			if (sum[j] - sum[i] < M)
-			{
-				continue;
-			}
-			if (sum[j] - sum[i] > M)
-			{
-				break;
-			}
-			if (sum[j] - sum[i] == M) ans++;
+			e++;
+			n += arr[e];
+			continue;
+		}
+		if (n > M)
+		{
+			s++;
+			n -= arr[s - 1];
+			continue;
+		}
+		if (n == M)
+		{
+			ans++;
+			e++;
+			n += arr[e];
+			continue;
 		}
 	}
+
+
 	cout << ans;
 
 	return 0;
