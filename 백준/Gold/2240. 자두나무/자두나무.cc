@@ -4,45 +4,57 @@ using ll = long long;
 
 int T, W;
 
-int dp[1001][31]; // [i][j]: i시간에 j번 움직였을 때 최대 개수
+int dp[31]; //dp[i]: i번 움직였을 때의 최대 자두 개수
+//홀수면 2번나무, 짝수면 1번나무에 위치해있다.
 
-int main() {
-
-	ios_base::sync_with_stdio(0); cin.tie(0);
+int main()
+{
 	cin >> T >> W;
-	int t;
-	for (int i = 1; i <= T; i++) //시간
+	int tree;
+	while (T--)
 	{
-		cin >> t;
-
-		for (int j = 0; j <= W; j++) //움직임
+		cin >> tree;
+		for (int i = 0; i <= W; i++)
 		{
-			if (j == 0)
+			if (tree == 1) //1번 나무에서 떨어짐
 			{
-				dp[i][j] = dp[i - 1][j];
-				if (t == 1) dp[i][j]++;
-				continue;
+				if (i == 0)
+				{
+					dp[i]++;
+					continue;
+				}
+				if (i % 2 == 0) //1번나무에 위치
+				{
+					//움직여서 i번 되는 경우 vs 원래 i번인 경우
+					dp[i] = max(dp[i], dp[i - 1]) + 1;
+				}
+				else //2번나무에 위치
+				{
+					//움직여서 i번 되는 경우 vs 원래 i번인 경우
+					dp[i] = max(dp[i], dp[i - 1]);
+				}
 			}
-			if (j % 2 == 0) //1번에 위치
+			else //2번 나무에서 떨어짐
 			{
-				//i초에 j번 움직여서 1번에 있으려면? i-1초에 j-1번 움직여서 2번에 있어야함
-				//								또는 i-1초에 j번 움직였음
-				dp[i][j] = max(dp[i - 1][j - 1], dp[i-1][j]);
-				if (t == 1) dp[i][j]++;
-			}
-			else //2번에 위치
-			{
-				//i초에 j번 움직여서 2번에 있으려면? i-1초에 j-1번 움직여서 1번에 있어야함.
-				//								또는 i-1초에 j번 움직였음
-				dp[i][j] = max(dp[i - 1][j - 1], dp[i - 1][j]);
-				if (t == 2) dp[i][j]++;
+				if (i == 0) continue;
+				if (i % 2 == 0) //1번나무에 위치
+				{
+					dp[i] = max(dp[i], dp[i - 1]);
+				}
+				else //2번나무에 위치
+				{
+					dp[i] = max(dp[i], dp[i - 1]) + 1;
+				}
 			}
 		}
 	}
-	int max_ = 0;
+	int ans = 0;
 	for (int i = 0; i <= W; i++)
 	{
-		max_ = max(max_, dp[T][i]);
+		ans = max(ans, dp[i]);
 	}
-	cout << max_;
+	cout << ans;
+
+	return 0;
 }
+
