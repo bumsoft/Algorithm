@@ -1,72 +1,93 @@
 #include <bits/stdc++.h>
+
 using namespace std;
 using ll = long long;
 
-int cost[1001];
+int T;
 
+int D[1001];
 
-int main() {
+int dp[1001]; //dp[i] : i건물을 지을 때 필요한 최대 시간
+// i전에 지어야 하는 것이 a,b라고 할 때,
+// dp[i] = D[i] + max(dp[a],dp[b]); => 이걸 위해서 a,b를 미리 구해야하나?
+// 진입차수가 0인 모든 부분을 큐에 넣고 시작하기. 아직 이전 건물이 지어지지 않은 경우, 다시 큐 뒤로 보내기
 
-	ios_base::sync_with_stdio(0); cin.tie(0);
+vector<int> nodes_in[1001];
+vector<int> nodes_out[1001];
 
-	int T; cin >> T;
-	int N, K, X, Y, W;
+int in_cnt[1001];
+//int out_cnt[1001];
+
+void init(int N)
+{
+	for (int i = 1; i <= N; i++)
+	{
+		dp[i] = INT_MAX;
+		nodes_in[i].clear();
+		nodes_out[i].clear();
+		in_cnt[i] = 0;
+	}
+}
+
+int main()
+{
+	ios::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+	cin >> T;
 	while (T--)
 	{
-		vector<int> E[1001];
-		int degree[1001];
-		queue<pair<int, int>> Q; // <정점,이전까지비용>
-		int save[1001];
+		int N, K, W;
 		cin >> N >> K;
+
+		init(N);
 
 		for (int i = 1; i <= N; i++)
 		{
-			cin >> cost[i];
-			degree[i] = 0;
-			save[i] = -1;
+			cin >> D[i];
 		}
-		while (K--)
+		int X, Y;
+		for (int i = 0; i < K; i++)
 		{
-			cin >> X >> Y;
-			E[X].push_back(Y);
-			degree[Y]++;
+			cin >> X >> Y; // X -> Y
+			nodes_in[Y].push_back(X);
+			nodes_out[X].push_back(Y);
+			in_cnt[Y]++;
+			//out_cnt[X]++;
 		}
 		cin >> W;
-		int mem = degree[W];
-		for (int i = 1; i <= N; i++) //진입차수 0인 정점 모두 PUSH!
+		queue<int> Q; //<node>
+		for (int i = 1; i <= N; i++)
 		{
-			if (degree[i] == 0)
+			if (in_cnt[i] == 0)
 			{
-				Q.push({ i,0 });
+				Q.push(i);
 			}
 		}
-		int ans = -1;
-		while (!Q.empty())
+		while (!Q.empty()) // 진입차수가 0(완료)된 것만 큐에 들어옴
 		{
-			int v = Q.front().first;
-			int c = Q.front().second;
+			int max_time = 0;
+			int now = Q.front();
+
+			for (int i = 0; i < nodes_in[now].size(); i++)
+			{
+				max_time = max(max_time, dp[nodes_in[now][i]]);
+			}
 			Q.pop();
-			if (v == W)
+			dp[now] = max_time + D[now];
+
+			if (now == W)
 			{
-				mem--;
-				ans = max(ans, c + cost[v]);
-				if (mem == 0) break;
-				continue;
+				cout << dp[now] << '\n';
+				break;
 			}
-			for (int i = 0; i < E[v].size(); i++)
+
+			//다음 건물
+			for (int i = 0; i < nodes_out[now].size(); i++)
 			{
-				degree[E[v][i]]--; //간선 삭제
-
-				save[E[v][i]] = max(save[E[v][i]], c + cost[v]);
-
-				if (degree[E[v][i]] == 0)//E[v][i]의 진입차수가 0이라면?
-				{
-					//가장 큰 값으로 넣기
-					Q.push({ E[v][i], save[E[v][i]] });
-				}
+				in_cnt[nodes_out[now][i]]--;
+				if(in_cnt[nodes_out[now][i]] == 0)
+					Q.push(nodes_out[now][i]);
 			}
 		}
-		cout << ans << '\n';
 	}
-
+	return 0;
 }
