@@ -10,30 +10,31 @@ using namespace std;
 // => vector<pair<int,string>>; //벡터 크기는 최대 1500
 
 bool vis[100'001];
+bool my_comp(const string& a, const string& b)
+{
+    return a.size() < b.size();
+}
 
 vector<int> solution(string s) {
     vector<int> answer;
     
-    vector<pair<int,string>> v;
+    vector<string> v;
     s = s.substr(1,s.size()-2);
     // "},{" 기준으로 분리한다.
     int start = 1;
-    int cnt = 1;
     for(int i=1;i<s.size();i++)
     {
         if(s[i]=='}')
         {
-            v.push_back({cnt,s.substr(start, i-start)});
+            v.push_back(s.substr(start, i-start));
             i += 2;
             start = i+1;
-            cnt = 1;
         }
-        else if(s[i] == ',') cnt++;
     }
-    sort(v.begin(), v.end());
+    sort(v.begin(), v.end(), my_comp);
     for(int i=0;i<v.size();i++)
     {
-        stringstream ss(v[i].second);
+        stringstream ss(v[i]);
         string x;
         while(getline(ss, x, ','))
         {
