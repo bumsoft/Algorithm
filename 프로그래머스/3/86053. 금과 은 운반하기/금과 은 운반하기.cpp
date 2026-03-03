@@ -18,7 +18,7 @@ long long solution(int a, int b, vector<int> g, vector<int> s, vector<int> w, ve
     
     ll start = 0;
     ll mid;
-    ll end = 100'000LL*1'000'000'0000;
+    ll end = 100'000LL*1'000'000'000 * 4;
     
     while(start <= end)
     {
