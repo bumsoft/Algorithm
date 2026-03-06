@@ -3,55 +3,55 @@
 using namespace std;
 
 vector<int> tree[18];
+int N;
+int dp[1 << 18];
 vector<int> info;
 
-bool vis[18];
-int node_cnt;
-int dfs(int now, int sheep, int wolf) // 방문한 노드, 양 수, 늑대 수
+int dfs(int state)
 {
-    int ans = 0;
+    if(dp[state] != -1) return dp[state];
     
-    for(int i=0;i<node_cnt;i++)
+    int sheep = 0; int wolf = 0;
+    for(int i=0;i<N;i++)
     {
-        if(vis[i]) // i번을 방문했었다면 -> 자식을 방문한다.
+        if((state & (1<<i)) == 0) continue;
+        if(info[i]==0) sheep++;
+        else wolf++;
+    }
+    if(sheep <= wolf) return dp[state] = 0;
+    
+    dp[state] = sheep; //state 상태에서 모은 양 수 일단 저장
+    
+    for(int i=0;i<N;i++)
+    {
+        if((state & (1<<i)) == 0) continue;
+        for(int j=0;j<tree[i].size();j++)
         {
-            for(int j=0;j<tree[i].size();j++)
-            {
-                int num = tree[i][j];
-                if(vis[num]) continue;
-                if(info[num] == 0) //양이라면
-                {
-                    vis[num] = 1;
-                    ans = max(ans,dfs(num, sheep+1, wolf));
-                    vis[num] = 0;
-                }
-                else //늑대라면
-                {
-                    if(sheep <= wolf+1)
-                        continue;
-                    vis[num] = 1;
-                    ans = max(ans, dfs(num, sheep, wolf+1));
-                    vis[num] = 0;
-                }
-                
-            }
+            int next_node = tree[i][j];
+            if((state & (1<<next_node)) != 0) continue; //지금 보는자식이 이미 포함됐다면 pass
+            dp[state] = max(dp[state], dfs(state | (1<<next_node))); //next_node 포함해서 dfs
         }
     }
-    return max(ans, sheep);
+    return dp[state];
 }
 
-int solution(vector<int> infoo, vector<vector<int>> edges) {
+int solution(vector<int> ii, vector<vector<int>> edges) {
     int answer = 0;
-    info = infoo;
-    node_cnt = info.size();
-    // 트리 저장
+    info = ii;
+    N = info.size();
+    for(int i=0;i<(1<<N);i++)
+    {
+        dp[i] = -1;
+    }
     for(int i=0;i<edges.size();i++)
     {
-        int a=edges[i][0];
-        int b=edges[i][1];
+        int a = edges[i][0];
+        int b = edges[i][1];
         tree[a].push_back(b);
     }
     
-    vis[0] = 1;
-    return dfs(0, 1, 0);
+    answer = dfs(1);
+    
+    
+    return answer;
 }
