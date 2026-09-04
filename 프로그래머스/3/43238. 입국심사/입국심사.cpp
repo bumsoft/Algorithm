@@ -1,36 +1,38 @@
 #include <bits/stdc++.h>
 
-using namespace std;
+
 using ll = long long;
 
-// 소요시간으로 파라매트릭 서치
+using namespace std;
 
 long long solution(int n, vector<int> times) {
+    long long answer = LLONG_MAX;
     
-    ll start = 1;
-    ll end = 1'000'000'000LL * 1'000'000'000;
+    // 총 시간이 mid 일 때, 각자 처리할 수 있는 인원 수의 합 >= 사람 수(n)
+    
+    ll low = 0;
+    ll high = 1'000'000'000L * 1'000'000'000L;
     ll mid;
-    ll ans = LLONG_MAX;
-    while(start<=end)
+    int nn = times.size();
+    while(low <= high)
     {
-        mid = (start + end)/2;
-        // mid 시간동안 총 몇명을 볼 수 있는지
-        ll num = 0;
-        for(int i=0;i<times.size();i++)
+        mid = (low + high) / 2;
+        ll cnt = 0;
+        for(int i=0;i<nn;i++)
         {
-            int t = times[i];
-            num += (mid / t);
+            cnt += mid/times[i];
         }
-        if(num >= n) // 더 많이 할 수 있으면, 시간 줄여도 됨
+        if(cnt >= n)
         {
-            ans = min(ans, mid);
-            end = mid - 1;
-            continue;
+            high = mid-1;
+            answer = min(answer, mid);
         }
-        else //num < N
+        else
         {
-            start = mid + 1;
+            low = mid+1;
         }
     }
-    return ans;
+    
+    
+    return answer;
 }
