@@ -6,25 +6,16 @@ vector<int> solution(vector<int> arr)
 {
     vector<int> answer;
     
-    stack<int> st;
+    int prev = arr[0];
+    answer.push_back(prev);
     
-    for(int i=arr.size()-1; i>=0;i--)
+    for(int i=1;i<arr.size();i++)
     {
-        int t = arr[i];
-        if(st.empty())
-        {
-           st.push(t);
-        }
-        else
-        {
-            if(st.top() == arr[i]) continue;
-            st.push(arr[i]);
-        }
+        if(prev == arr[i]) continue;
+        
+        answer.push_back(arr[i]);
+        prev = arr[i];
     }
-    while(!st.empty())
-    {
-        answer.push_back(st.top());
-        st.pop();
-    }
+    
     return answer;
 }
