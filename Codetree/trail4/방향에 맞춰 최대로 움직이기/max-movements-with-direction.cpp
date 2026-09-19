@@ -65,7 +65,7 @@ void back_tracking(int nr, int nc, int cnt)
     else if(dir==4)
     {
         //동남
-        if(nr==n-1 || nr==n-1)
+        if(nr==n-1 || nc==n-1)
         {
             return;
         }
