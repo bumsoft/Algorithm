@@ -4,6 +4,7 @@ using namespace std;
 
 int N, M;
 int grid[100][100];
+bool vis[100][100];
 
 int dx[2] = {0,1};
 int dy[2] = {1,0};
@@ -20,7 +21,8 @@ void dfs(int r, int c)
             ans=1;
             return;
         }
-        if(grid[r+dx[i]][c+dy[i]] == 0) continue;
+        if(grid[r+dx[i]][c+dy[i]] == 0 || vis[r+dx[i]][c+dy[i]]==1) continue;
+        vis[r+dx[i]][c+dy[i]]=1;
         dfs(r+dx[i], c+dy[i]);
     }
 }
@@ -35,6 +37,7 @@ int main() {
     }
 
     // Please write your code here.
+    vis[0][0]=1;
     dfs(0,0);
     cout<< (ans) ? 1:0;
 
