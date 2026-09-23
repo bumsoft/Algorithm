@@ -56,7 +56,7 @@ int main() {
     }
     // K(mid)가 커지면, 안전구역이 많아지고
     // K가 작아지면, 안전구역의 수는 줄어든다.
-    for(int mid = 1; mid < end_; mid++)
+    for(int mid = 1; mid <= end_; mid++)
     {
         init_vis();
         int temp = 0;
