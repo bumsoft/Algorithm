@@ -6,7 +6,7 @@ int N, M;
 int grid[50][50];
 
 int end_;
-int ans_k;
+int ans_k=1;
 int ans_num;
 
 int dx[] = {0,1,0,-1};
