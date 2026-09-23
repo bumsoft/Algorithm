@@ -36,6 +36,7 @@ void bfs(int r, int c, int k)
         {
             int nnr = nr + dx[i];
             int nnc = nc + dy[i];
+            if(nnr >= N || nnr < 0 || nnc >=M || nnc < 0) continue;
             if(grid[nnr][nnc] <= k) continue;
             if(vis[nnr][nnc]) continue;
             vis[nnr][nnc]=1;
