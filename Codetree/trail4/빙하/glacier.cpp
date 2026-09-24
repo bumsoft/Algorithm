@@ -54,6 +54,7 @@ int main() {
 
     int turn = 0;
     int cnt = 0;
+    int prev_cnt=0;
     while(!Q.empty())
     {
         int _turn = Q.front().first;
@@ -68,7 +69,8 @@ int main() {
         else
         {
             turn = _turn;
-            cnt = 1;
+            if(a[r][c] == 1) {prev_cnt = cnt; cnt = 1;}
+            else {prev_cnt = cnt; cnt = 0;}
         }
         for(int i=0;i<4;i++)
         {
@@ -80,6 +82,11 @@ int main() {
             Q.push({turn+1, {nr,nc}});
             vis[nr][nc]=1;
         }
+    }
+    if(cnt==0)
+    {
+        turn--;
+        cnt = prev_cnt;
     }
     cout<<turn<<' '<<cnt;
 
