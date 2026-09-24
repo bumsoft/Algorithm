@@ -27,7 +27,7 @@ int main() {
         }
     }
 
-    queue<pair<int, pair<int,int>>> Q; // <turn, <i, j>>
+    priority_queue<pair<int, pair<int,int>>> Q; // <turn, <i, j>>
     //1. 바깥쪽 모든 물을 Q에 넣고 방문처리한다.
     queue<pair<int,int>> temp_Q;
     temp_Q.push({0,0});
@@ -54,23 +54,21 @@ int main() {
 
     int turn = 0;
     int cnt = 0;
-    int prev_cnt=0;
     while(!Q.empty())
     {
-        int _turn = Q.front().first;
-        int r = Q.front().second.first;
-        int c = Q.front().second.second;
+        int _turn = -Q.top().first;
+        int r = Q.top().second.first;
+        int c = Q.top().second.second;
         Q.pop();
 
         if(_turn == turn) 
         {
-            if(a[r][c] == 1) cnt++; //빙하였어야만 개수 증가
+            if(a[r][c]==1) cnt++; //빙하였어야만 개수 증가
         }
         else
         {
             turn = _turn;
-            if(a[r][c] == 1) {prev_cnt = cnt; cnt = 1;}
-            else {prev_cnt = cnt; cnt = 0;}
+            cnt = 1;
         }
         for(int i=0;i<4;i++)
         {
@@ -79,14 +77,13 @@ int main() {
             if(nr < 0 || nr >= n || nc < 0 || nc >= m) continue;
             if(vis[nr][nc]) continue;
             // 다음에 물이 될 것을 찾아야하는데, 원래 물이었던 것은 개수에 포함시키면 안됨.(위에서 처리)
-            Q.push({turn+1, {nr,nc}});
+            if(a[nr][nc]==0)
+            {
+                Q.push({-turn,{nr,nc}});
+            }
+            else Q.push({-(turn+1), {nr,nc}});
             vis[nr][nc]=1;
         }
-    }
-    if(cnt==0)
-    {
-        turn--;
-        cnt = prev_cnt;
     }
     cout<<turn<<' '<<cnt;
 
