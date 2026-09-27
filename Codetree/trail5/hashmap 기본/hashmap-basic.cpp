@@ -21,7 +21,7 @@ int main() {
     }
 
     // Please write your code here.
-    map<int,int> m;
+    unordered_map<int,int> m;
     for(int i=0;i<n;i++)
     {
         if(cmd[i] == "add")
