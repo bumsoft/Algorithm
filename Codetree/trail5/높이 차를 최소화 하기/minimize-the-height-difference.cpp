@@ -59,6 +59,7 @@ int main() {
 
         for(int i=1;i<=500;i++) // 지나는 가장 작은 값이 i일때...
         {
+            if(!(board[0][0] >= i && board[0][0] <=i+mid)) continue;
             init_vis();
             vis[0][0] = 1; 
             // i ~ i+mid 만 지나서 갈 수 있는지 확인한다.
