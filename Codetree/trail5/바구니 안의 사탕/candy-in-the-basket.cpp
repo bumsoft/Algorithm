@@ -20,7 +20,7 @@ int main() {
     int start = 0;
     int end_ = 2*K;
     int ans = 0;
-    for(int i=0;i<end_;i++)
+    for(int i=0;i<min(end_, 1'000'001);i++)
     {
         ans+=num[i];
     }
