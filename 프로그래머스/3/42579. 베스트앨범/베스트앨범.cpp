@@ -37,7 +37,7 @@ vector<int> solution(vector<string> genres, vector<int> plays) {
             //두번째 곡인 경우
             if(tmp_.second == -1)
             {
-                if(plays[tmp_.first] > p)
+                if(plays[tmp_.first] >= p)
                     m_top[g] = {tmp_.first, i};
                 else
                     m_top[g] = {i, tmp_.first};
