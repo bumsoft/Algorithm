@@ -1,48 +1,38 @@
 #include <bits/stdc++.h>
+
 using namespace std;
 
+// 모든 물건을 훔친다. 즉 각 물건에 대해서는 A 또는 B가 훔치는 선택지만이 존재함. => 안훔치는 경우는 없다.
 
-
-int dp[41][150];
-
-
+int dp[120][40]; // dp[i][j]: j번 물건까지 훔쳤을 때, B의 흔적 i일때 A의 흔적 최소되도록
 
 int solution(vector<vector<int>> info, int n, int m) {
     int answer = 0;
     
-    for(int i=0;i<41;i++)
-    {
-        for(int j=0;j<150;j++)
-        {
-            dp[i][j] = 200;
-        }
-    }
-    
-    //A가 훔친경우
-    dp[0][0] = info[0][0];
-    
-    //B가 훔친경우
-    dp[0][info[0][1]] = 0;
-    
-    for(int i=1;i<info.size();i++)
-    {
-        for(int j=0;j<=120;j++)
-        {
-            //B가 훔치는게 불가능한 경우
-            if( j - info[i][1] < 0) dp[i][j] = dp[i-1][j] + info[i][0];
-            
-            //i번째 물건에서, B의 흔적 j이려면?
-            // B가 훔친경우
-            else dp[i][j] = min(dp[i-1][j-info[i][1]], dp[i-1][j] + info[i][0]);
-        }
-    }
-    
-    int ans = INT_MAX;
     for(int i=0;i<m;i++)
     {
-         ans = min(ans, dp[info.size()-1][i]);
+        for(int j=0;j<info.size();j++)
+        {
+            int a = info[j][0];
+            int b = info[j][1];
+            if(i-b<0) // a가 훔쳐야함d
+            {
+                dp[i][j] = dp[i][j-1]+a;
+            }
+            else
+            {
+                dp[i][j] = min(dp[i-b][j-1], dp[i][j-1] + a);
+            }
+            cout<<"dp["<<i<<"]["<<j<<"]: "<< dp[i][j]<<'\n';
+        }
     }
-    if(ans >= n) answer = -1;
-    else answer = ans;
+    answer = n;
+    for(int i=0;i<m;i++)
+    {
+        cout<<dp[i][info.size()-1]<<' ';
+        answer = min(dp[i][info.size()-1], answer);
+    }
+    if(answer >= n) return -1;
+    
     return answer;
 }
