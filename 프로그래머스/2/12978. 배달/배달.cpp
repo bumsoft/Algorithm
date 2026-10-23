@@ -31,12 +31,12 @@ int solution(int N, vector<vector<int> > road, int K) {
         int cost = -PQ.top().first;
         PQ.pop();
         
-        if(cost > D[now]) continue;
+        if(cost != D[now]) continue;
         for(int i=0;i<vertex[now].size();i++)
         {
             int next_ver = vertex[now][i].first;
             int next_cost = vertex[now][i].second + cost;
-            if(next_cost > D[next_ver]) continue;
+            if(next_cost >= D[next_ver]) continue;
             D[next_ver] = next_cost;
             PQ.push({-next_cost, next_ver});
         }
