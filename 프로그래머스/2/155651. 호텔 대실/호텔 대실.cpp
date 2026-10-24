@@ -1,28 +1,41 @@
 #include <bits/stdc++.h>
-
 using namespace std;
-
-int arr[1440]; // 0 ~ 1439
 
 int trans(string t)
 {
-    return stoi(t.substr(0,2)) * 60 + stoi(t.substr(3,2));
+    return stoi(t.substr(0, 2)) * 60 + stoi(t.substr(3, 2));
 }
 
-int solution(vector<vector<string>> book_time) {
-    int answer = 0;
-    
-    for(int i=0;i<book_time.size();i++)
+int solution(vector<vector<string>> book_time)
+{
+    vector<pair<int, int>> v;
+
+    for(auto &b : book_time)
     {
-        int s = trans(book_time[i][0]);
-        
-        int e = min(trans(book_time[i][1]) + 9, 1439);
-        for(int t=s;t<=e;t++)
-            arr[t]++;
+        int s = trans(b[0]);
+        int e = trans(b[1]) + 10;
+
+        v.push_back({s, e});
     }
-    for(int i=0;i<=1439;i++)
+
+    // 시작 시간 오름차순 정렬
+    sort(v.begin(), v.end());
+
+    // 객실이 다시 사용 가능해지는 시간 저장 (최소 힙)
+    priority_queue<int, vector<int>, greater<int>> pq;
+
+    for(auto [s, e] : v)
     {
-        answer = max(answer, arr[i]);
+        // 가장 빨리 비는 객실 재사용
+        if(!pq.empty() && pq.top() <= s)
+        {
+            pq.pop();
+        }
+
+        // 새 예약 배정
+        pq.push(e);
     }
-    return answer;
+
+    // 필요한 최소 객실 수
+    return pq.size();
 }
