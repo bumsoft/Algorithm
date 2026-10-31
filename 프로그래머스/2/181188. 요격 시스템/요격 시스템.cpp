@@ -2,6 +2,7 @@
 
 using namespace std;
 
+// 그냥 시작점 기준 정렬만 해도 됨
 
 int solution(vector<vector<int>> targets) {
     int answer = 0;
