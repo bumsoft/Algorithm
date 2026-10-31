@@ -11,7 +11,7 @@ int solution(vector<vector<int>> targets) {
     {
         PQ.push({targets[i][0], targets[i][1]});
     }
-    int a = PQ.top().first;
+    //int a = PQ.top().first;
     int b = PQ.top().second;
     PQ.pop();
     while(!PQ.empty())
@@ -22,7 +22,7 @@ int solution(vector<vector<int>> targets) {
         if(b <= s)
         {
             answer++;
-            a = s;
+            //a = s;
             b = e;
             continue;
         }
