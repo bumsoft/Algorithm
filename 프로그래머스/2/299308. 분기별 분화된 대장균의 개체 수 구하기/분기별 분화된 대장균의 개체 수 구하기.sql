@@ -8,7 +8,7 @@ case
     else '4Q'
 end
 as QUARTER,
-count(*)
+count(*) as ECOLI_COUNT
 from ecoli_data
 group by QUARTER
 order by QUARTER;
