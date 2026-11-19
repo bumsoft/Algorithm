@@ -1,14 +1,14 @@
--- 1 2 3 | 4 5 6 | 7 8 9 | 10 11 12
-select quarter, count(*) as ecoli_count
-from(
+-- 코드를 작성해주세요
+
 select
-id, DIFFERENTIATION_DATE,
 case
-    when month(DIFFERENTIATION_DATE) >= 10 then '4Q'
-    when month(DIFFERENTIATION_DATE) >= 7 then '3Q'
-    when month(DIFFERENTIATION_DATE) >= 4 then '2Q'
-    else '1Q'
-end as quarter
-from ecoli_data) t
-group by quarter
-order by quarter asc;
+    when month(DIFFERENTIATION_DATE) <= 3 then '1Q'
+    when month(DIFFERENTIATION_DATE) <= 6 then '2Q'
+    when month(DIFFERENTIATION_DATE) <= 9 then '3Q'
+    else '4Q'
+end
+as QUARTER,
+count(*)
+from ecoli_data
+group by QUARTER
+order by QUARTER;
