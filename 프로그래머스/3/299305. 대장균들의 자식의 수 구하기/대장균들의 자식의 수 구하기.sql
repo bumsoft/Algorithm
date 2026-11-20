@@ -1,5 +1,4 @@
--- 코드를 작성해주세요
-select a.id, count(b.id) as child_count
-from ecoli_data a
-left join ecoli_data b on a.id = b.parent_id
-group by a.id;
+select A.ID AS ID, count(B.id) as CHILD_COUNT
+from ecoli_data A
+left join ecoli_data B on A.id = B.parent_id
+group by A.id
